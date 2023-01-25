@@ -12,13 +12,20 @@
 
   <!-- use data -->
   <script>
+    //Parse the Catalog
     const titles = Object.keys(window.the_catalog)
 
-    //Get a random integer up the to total number of titles
-    const randomIndex = Math.floor( Math.random() * titles.length )
+    //Check if track_id is set in url
+    const trackIdCheck = checkTrackId()
 
-    const randomTrack = window.the_catalog[ titles[randomIndex] ]
-    console.log('random track', titles[randomIndex], randomTrack)
+    //Set track index either to track_id if present, or else random
+    const trackIndex = (trackIdCheck === null)
+        ? Math.floor( Math.random() * titles.length )
+        : trackIdCheck
+
+    //Get Track Url
+    const trackUrl = window.the_catalog[ titles[trackIndex] ]
+    console.log('track title & url:', titles[trackIndex], trackUrl)
 
     //Get player
     const player = document.getElementById('player')
@@ -28,12 +35,25 @@
     player.appendChild(source)
 
     //Source with a random track
-    source.setAttribute('src', randomTrack)
+    source.setAttribute('src', trackUrl)
     source.setAttribute('type', 'audio/mp3')
 
     //Update the track title
     const currTrackTitle = document.getElementById("track_title")
-    currTrackTitle.innerText = titles[randomIndex]
+    currTrackTitle.innerText = titles[trackIndex]
+
+    //Update the url path with track info
+    window.history.replaceState({}, '', `?track_id=${trackIndex}`)
+
+    //Use track_id if we get it
+    function checkTrackId() {  //Setting in a function cause we're going to call it earlier in script, but leaving code here cause this is where it came up
+
+      //See if there's a track id
+      const url = new URL(window.location.href)
+      const trackId = url.searchParams.get('track_id')
+
+      return trackId
+    }
   </script>
 </html>
 
