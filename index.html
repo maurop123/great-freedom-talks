@@ -5,8 +5,9 @@
   <script type="text/javascript" src="the_catalog.js"></script>
 
   <body>
-    <audio id="player" controls>
-    </audio>
+    <h1>Candice Player</h1>
+    <h2 id="track_title"></h2>
+    <audio id="player" controls></audio>
   </body>
 
   <!-- use data -->
@@ -26,8 +27,13 @@
     const source = document.createElement('source')
     player.appendChild(source)
 
+    //Source with a random track
     source.setAttribute('src', randomTrack)
     source.setAttribute('type', 'audio/mp3')
+
+    //Update the track title
+    const currTrackTitle = document.getElementById("track_title")
+    currTrackTitle.innerText = titles[randomIndex]
   </script>
 </html>
 
