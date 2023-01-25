@@ -1,9 +1,33 @@
 <!-- candice o'denver player -->
 
 <html style="background:black;color:white">
-  <script type="module">
-    import catalog from './the_catalog.js'
-    console.log('catalog', catalog)
+  <!-- import data -->
+  <script type="text/javascript" src="the_catalog.js"></script>
+
+  <body>
+    <audio id="player" controls>
+    </audio>
+  </body>
+
+  <!-- use data -->
+  <script>
+    const titles = Object.keys(window.the_catalog)
+
+    //Get a random integer up the to total number of titles
+    const randomIndex = Math.floor( Math.random() * titles.length )
+
+    const randomTrack = window.the_catalog[ titles[randomIndex] ]
+    console.log('random track', titles[randomIndex], randomTrack)
+
+    //Get player
+    const player = document.getElementById('player')
+
+    //Add source
+    const source = document.createElement('source')
+    player.appendChild(source)
+
+    source.setAttribute('src', randomTrack)
+    source.setAttribute('type', 'audio/mp3')
   </script>
 </html>
 
