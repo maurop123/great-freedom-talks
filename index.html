@@ -1,28 +1,26 @@
 <!-- candice o'denver player -->
 
-<html style="background:black">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script>
-    //GET web audio archive
-    const axios = window.axios
-    const url = 'https://web.archive.org/web/20150517055039/http://www.greatfreedom.org/audiomore.html'
-    axios.get(url).then(response => {
-      if (response.status !== 200) {
-        alert('Could not reach the bucket')
-      }
-      else { //Status Is 200
-        console.log('Bucket reached')
+<html style="background:black;color:white">
+  <!-- import Vue -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-        // load catalog
-      }
-    })
+  <body>
+    <!-- Templating with Vue -->
+    <div id="vue-container">
+      {{ message }}
+    </div>
+  </body>
 
-    // Search first response for 
-  </script>
   <script>
-    // - check s3 server. if error, warn
-    // - load catalog
-    // - let user get a random one, or pick one off the catalog
+    //Setup Vue
+    const { createApp } = Vue
+    createApp({
+      data() {
+        return {
+          message: 'Hello Vue!'
+        }
+      }
+    }).mount('#vue-container')
   </script>
 </html>
 
