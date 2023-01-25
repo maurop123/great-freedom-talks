@@ -1,26 +1,9 @@
 <!-- candice o'denver player -->
 
 <html style="background:black;color:white">
-  <!-- import Vue -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
-  <body>
-    <!-- Templating with Vue -->
-    <div id="vue-container">
-      {{ message }}
-    </div>
-  </body>
-
-  <script>
-    //Setup Vue
-    const { createApp } = Vue
-    createApp({
-      data() {
-        return {
-          message: 'Hello Vue!'
-        }
-      }
-    }).mount('#vue-container')
+  <script type="module">
+    import catalog from './the_catalog.js'
+    console.log('catalog', catalog)
   </script>
 </html>
 
