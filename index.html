@@ -5,10 +5,35 @@
   <script type="text/javascript" src="the_catalog.js"></script>
 
   <body>
-    <h1>Candice Player</h1>
-    <h2 id="track_title"></h2>
-    <audio id="player" controls></audio>
+    <div class="flex container">
+      <div>
+        <h1>Candice Player</h1>
+      </div>
+      <div>
+        <h2 id="track_title"></h2>
+      </div>
+      <div>
+        <audio id="player" controls></audio>
+      </div>
+    </div>
   </body>
+
+  <style>
+    .container {
+      border: 4px white solid;
+      height: 100%;
+    }
+
+    .flex {
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: center;
+    }
+
+    .flex * {
+      margin: 0 auto;
+    }
+  </style>
 
   <!-- use data -->
   <script>
