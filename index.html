@@ -1,13 +1,17 @@
 <!-- candice o'denver player -->
 
 <html style="background:black;color:white">
+    <title>Candice Player</title>
+
     <!-- import data -->
     <script type="text/javascript" src="the_catalog.js"></script>
 
     <body>
-        <div class="flex container">
+        <div class="container">
             <div>
-                <h1>Candice Player</h1>
+                <a id="player_title_link">
+                    <h1>Candice Player</h1>
+                </a>
             </div>
             <div>
                 <a id="track_title_link">
@@ -25,19 +29,23 @@
             color: #2aa2c5;
         }
 
+        a#player_title_link {
+            color: white;
+        }
+
         .container {
             border: 4px white solid;
             height: 100%;
         }
 
-        .flex {
-            display: flex;
-            flex-flow: column wrap;
-            justify-content: center;
-        }
+        @media only screen and (min-width: 600px) {
+            body {
+                font-size: 3em;
+            }
 
-        .flex * {
-            margin: auto;
+            #player {
+                width: 80%;
+            }
         }
     </style>
 
@@ -73,10 +81,15 @@
         const currTrackTitle = document.getElementById("track_title")
         currTrackTitle.innerText = titles[trackIndex]
 
-        // Add href to track link
+        // Add href to track title link
         const trackTitleLink = document.getElementById("track_title_link")
         const trackTitleLinkHref= `${window.location.href.split('?')[0]}?track_id=${trackIndex}`
         trackTitleLink.setAttribute("href", trackTitleLinkHref)
+
+        // Add href to player title link
+        const playerTitleLink = document.getElementById("player_title_link")
+        const playerTitleLinkHref= window.location.href.split('?')[0]
+        playerTitleLink.setAttribute("href", playerTitleLinkHref)
 
 
         // FUNCTIONS
