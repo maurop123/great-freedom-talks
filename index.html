@@ -1,85 +1,96 @@
 <!-- candice o'denver player -->
 
 <html style="background:black;color:white">
-  <!-- import data -->
-  <script type="text/javascript" src="the_catalog.js"></script>
+    <!-- import data -->
+    <script type="text/javascript" src="the_catalog.js"></script>
 
-  <body>
-    <div class="flex container">
-      <div>
-        <h1>Candice Player</h1>
-      </div>
-      <div>
-        <h2 id="track_title"></h2>
-      </div>
-      <div>
-        <audio id="player" controls></audio>
-      </div>
-    </div>
-  </body>
+    <body>
+        <div class="flex container">
+            <div>
+                <h1>Candice Player</h1>
+            </div>
+            <div>
+                <a id="track_title_link">
+                    <h2 id="track_title"></h2>
+                </a>
+            </div>
+            <div>
+                <audio id="player" controls></audio>
+            </div>
+        </div>
+    </body>
 
-  <style>
-    .container {
-      border: 4px white solid;
-      height: 100%;
-    }
+    <style>
+        a {
+            color: #2aa2c5;
+        }
 
-    .flex {
-      display: flex;
-      flex-flow: column wrap;
-      justify-content: center;
-    }
+        .container {
+            border: 4px white solid;
+            height: 100%;
+        }
 
-    .flex * {
-      margin: 0 auto;
-    }
-  </style>
+        .flex {
+            display: flex;
+            flex-flow: column wrap;
+            justify-content: center;
+        }
 
-  <!-- use data -->
-  <script>
-    //Parse the Catalog
-    const titles = Object.keys(window.the_catalog)
+        .flex * {
+            margin: auto;
+        }
+    </style>
 
-    //Check if track_id is set in url
-    const trackIdCheck = checkTrackId()
+    <!-- use data -->
+    <script>
+        //Parse the Catalog
+        const titles = Object.keys(window.the_catalog)
 
-    //Set track index either to track_id if present, or else random
-    const trackIndex = (trackIdCheck === null)
-        ? Math.floor( Math.random() * titles.length )
-        : trackIdCheck
+        //Check if track_id is set in url
+        const trackIdCheck = checkTrackId()
 
-    //Get Track Url
-    const trackUrl = window.the_catalog[ titles[trackIndex] ]
-    console.log('track title & url:', titles[trackIndex], trackUrl)
+        //Set track index either to track_id if present, or else random
+        const trackIndex = (trackIdCheck === null)
+            ? Math.floor( Math.random() * titles.length )
+            : trackIdCheck
 
-    //Get player
-    const player = document.getElementById('player')
+        //Get Track Url
+        const trackUrl = window.the_catalog[ titles[trackIndex] ]
+        console.log('track title & url:', titles[trackIndex], trackUrl)
 
-    //Add source
-    const source = document.createElement('source')
-    player.appendChild(source)
+        //Get player
+        const player = document.getElementById('player')
 
-    //Source with a random track
-    source.setAttribute('src', trackUrl)
-    source.setAttribute('type', 'audio/mp3')
+        //Add source
+        const source = document.createElement('source')
+        player.appendChild(source)
 
-    //Update the track title
-    const currTrackTitle = document.getElementById("track_title")
-    currTrackTitle.innerText = titles[trackIndex]
+        //Source with a random track
+        source.setAttribute('src', trackUrl)
+        source.setAttribute('type', 'audio/mp3')
 
-    //Update the url path with track info
-    window.history.replaceState({}, '', `?track_id=${trackIndex}`)
+        //Update the track title
+        const currTrackTitle = document.getElementById("track_title")
+        currTrackTitle.innerText = titles[trackIndex]
 
-    //Use track_id if we get it
-    function checkTrackId() {  //Setting in a function cause we're going to call it earlier in script, but leaving code here cause this is where it came up
+        // Add href to track link
+        const trackTitleLink = document.getElementById("track_title_link")
+        const trackTitleLinkHref= `${window.location.href.split('?')[0]}?track_id=${trackIndex}`
+        trackTitleLink.setAttribute("href", trackTitleLinkHref)
 
-      //See if there's a track id
-      const url = new URL(window.location.href)
-      const trackId = url.searchParams.get('track_id')
 
-      return trackId
-    }
-  </script>
+        // FUNCTIONS
+
+        //Use track_id if we get it
+        //Setting in a function cause we're going to call it earlier in script, but leaving code here cause this is where it came up
+        function checkTrackId() {    
+            //See if there's a track id
+            const url = new URL(window.location.href)
+            const trackId = url.searchParams.get('track_id')
+
+            return trackId
+        }
+    </script>
 </html>
 
 
