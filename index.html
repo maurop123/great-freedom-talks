@@ -29,6 +29,16 @@
             </div>
             <div>
                 <input type="text" id="track_time" />
+            </div>
+            <div>
+                <button id="bookmark_button">Bookmark</button>
+            </div>
+            <div>
+                <textarea id="bookmark_notes" style="display:none"></textarea>
+            </div>
+            <div>
+                <button id="save_bookmark_button" style="display:none">Save</button>
+            </div>
         </div>
     </body>
 
@@ -85,8 +95,8 @@
         source.setAttribute('type', 'audio/mp3')
 
         //Update the track title
-        const currTrackTitle = document.getElementById("track_title")
-        currTrackTitle.innerText = titles[trackIndex]
+        const trackTitle = document.getElementById("track_title")
+        trackTitle.innerText = titles[trackIndex]
 
         // Add href to track title link
         const trackTitleLink = document.getElementById("track_title_link")
@@ -113,22 +123,56 @@
         })
 
         //Track Time
-        const trackTime = document.getElementById("track_time")
+        const trackTimeInput = document.getElementById("track_time")
         player.addEventListener("timeupdate", () => {
-            trackTime.value = Math.floor(player.currentTime) //round down
+            trackTimeInput.value = Math.floor(player.currentTime) //round down
+        })
+
+        //Bookmark
+        const bookmarkBtn = document.getElementById("bookmark_button")
+        const bookmarkNotes = document.getElementById("bookmark_notes")
+        const saveBookmarkBtn = document.getElementById("save_bookmark_button")
+        bookmarkBtn.addEventListener("click", () => {
+            const bookmarkTime = Math.floor(player.currentTime)
+            bookmarkNotes.style.display = 'block'
+            saveBookmarkBtn.style.display = 'block'
+        })
+
+        // Save bookmark
+        saveBookmarkBtn.addEventListener("click", () => {
+            saveBookmarkBtn.style.display = 'none'
+            bookmarkNotes.style.display = 'none'
+
+            const trackId = trackIndex
+            const trackTime = trackTimeInput.value
+            const notes = bookmarkNotes.value
+
+            saveBookmarkLocalStorage(trackId, trackTime, notes)
         })
 
 
         // FUNCTIONS
 
         //Use track_id if we get it
-        //Setting in a function cause we're going to call it earlier in script, but leaving code here cause this is where it came up
         function checkTrackId() {    
             //See if there's a track id
             const url = new URL(window.location.href)
             const trackId = url.searchParams.get('track_id')
 
             return trackId
+        }
+
+        //Save bookmark in local storage
+        function saveBookmarkLocalStorage(id, time, note) {
+            const _bookmarks = localStorage.getItem('bookmarks')
+
+            const bookmarks = (_bookmarks !== null)
+                ? JSON.parse(_bookmarks)
+                : {}
+
+            bookmarks[id] = { [time]: note }
+
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
         }
     </script>
 </html>
