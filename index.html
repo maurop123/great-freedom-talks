@@ -27,6 +27,8 @@
             <div>
                 <button id="pause_button">Pause</button>
             </div>
+            <div>
+                <input type="text" id="track_time" />
         </div>
     </body>
 
@@ -108,6 +110,12 @@
         pauseButton.addEventListener('click', () => {
             // Pause Audio
             player.pause()
+        })
+
+        //Track Time
+        const trackTime = document.getElementById("track_time")
+        player.addEventListener("timeupdate", () => {
+            trackTime.value = Math.floor(player.currentTime) //round down
         })
 
 
