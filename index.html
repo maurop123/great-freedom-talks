@@ -21,6 +21,12 @@
             <div>
                 <audio id="player" controls></audio>
             </div>
+            <div>
+                <button id="play_button">Play</button>
+            </div>
+            <div>
+                <button id="pause_button">Pause</button>
+            </div>
         </div>
     </body>
 
@@ -40,7 +46,6 @@
 
         @media only screen and (min-width: 600px) {
             body {
-                font-size: 3em;
             }
 
             #player {
@@ -90,6 +95,20 @@
         const playerTitleLink = document.getElementById("player_title_link")
         const playerTitleLinkHref= window.location.href.split('?')[0]
         playerTitleLink.setAttribute("href", playerTitleLinkHref)
+
+        //Listen to Play Button
+        const playButton = document.getElementById("play_button")
+        playButton.addEventListener('click', () => {
+            // Play Audio
+            player.play()
+        })
+
+        //Listen to Pause Button
+        const pauseButton = document.getElementById("pause_button")
+        pauseButton.addEventListener('click', () => {
+            // Pause Audio
+            player.pause()
+        })
 
 
         // FUNCTIONS
