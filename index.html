@@ -3,100 +3,70 @@
 <html style="background:black;color:white">
     <title>Candice Player</title>
 
+    <meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="main.css">
+
     <!-- import data -->
     <script type="text/javascript" src="the_catalog.js"></script>
 
-    <body>
-        <div class="container">
-            <div>
-                <a id="player_title_link">
-                    <h1>Candice Player</h1>
-                </a>
-            </div>
-            <div>
-                <a id="track_title_link">
-                    <h2 id="track_title"></h2>
-                </a>
-            </div>
-            <div>
-                <audio id="player" controls></audio>
-            </div>
-            <div>
-                <button id="play_button">Play</button>
-            </div>
-            <div>
-                <button id="pause_button">Pause</button>
-            </div>
-            <div>
-                <input type="text" id="track_time" />
-            </div>
-            <div>
-                <button id="bookmark_button">Bookmark</button>
-            </div>
-            <div>
-                <textarea id="bookmark_notes" style="display:none"></textarea>
-            </div>
-            <div>
-                <button id="save_bookmark_button" style="display:none">Save</button>
-            </div>
-        </div>
+    <body class="container">
+		<div class="app-title">
+			<a id="player_title_link">
+				<h1>Candice Player</h1>
+			</a>
+		</div>
+		<div>
+			<div>
+				<a id="track_title_link">
+					<h2 id="track_title"></h2>
+				</a>
+			</div>
+
+			<div>
+				<audio id="player" controls></audio>
+			</div>
+
+			<div class="mt-2 text-right">
+				<button id="favorite_button"
+					onclick="favorite_track()">
+						favorite
+				</button>
+			</div>
+
+			<div id="faves_list">
+			</div>
+		</div>
+	    <footer>
+		</footer>
     </body>
-
-    <style>
-        a {
-            color: #2aa2c5;
-        }
-
-        a#player_title_link {
-            color: white;
-        }
-
-        .container {
-            border: 4px white solid;
-            height: 100%;
-        }
-
-        @media only screen and (min-width: 600px) {
-            body {
-            }
-
-            #player {
-                width: 80%;
-            }
-        }
-    </style>
 
     <!-- use data -->
     <script>
+
         //Parse the Catalog
         const titles = Object.keys(window.the_catalog)
 
-        //Check if track_id is set in url
-        const trackIdCheck = checkTrackId()
 
-        //Set track index either to track_id if present, or else random
-        const trackIndex = (trackIdCheck === null)
-            ? Math.floor( Math.random() * titles.length )
-            : trackIdCheck
+        //Get track index
+        const trackIndex = getTrackId()
+
 
         //Get Track Url
         const trackUrl = window.the_catalog[ titles[trackIndex] ]
         console.log('track title & url:', titles[trackIndex], trackUrl)
 
-        //Get player
-        const player = document.getElementById('player')
 
-        //Add source
-        const source = document.createElement('source')
-        player.appendChild(source)
+        //Setup Player
+		const player = setupPlayer(trackUrl)
 
-        //Source with a random track
-        source.setAttribute('src', trackUrl)
-        source.setAttribute('type', 'audio/mp3')
 
         //Update the track title
         const trackTitle = document.getElementById("track_title")
-        trackTitle.innerText = titles[trackIndex]
+		const titleDotSplit = titles[trackIndex].split('.')
+		titleDotSplit.pop()
+        trackTitle.innerText = titleDotSplit.join('.')
 
         // Add href to track title link
         const trackTitleLink = document.getElementById("track_title_link")
@@ -105,75 +75,102 @@
 
         // Add href to player title link
         const playerTitleLink = document.getElementById("player_title_link")
-        const playerTitleLinkHref= window.location.href.split('?')[0]
+        const playerTitleLinkHref = window.location.href.split('?')[0]
         playerTitleLink.setAttribute("href", playerTitleLinkHref)
 
-        //Listen to Play Button
-        const playButton = document.getElementById("play_button")
-        playButton.addEventListener('click', () => {
-            // Play Audio
-            player.play()
-        })
 
-        //Listen to Pause Button
-        const pauseButton = document.getElementById("pause_button")
-        pauseButton.addEventListener('click', () => {
-            // Pause Audio
-            player.pause()
-        })
+		//Load saved faves
+		const _faves = localStorage.getItem('candice_favorites')
+		const faves = (_faves !== null)
+			? JSON.parse(_faves)
+			: []
 
-        //Track Time
-        const trackTimeInput = document.getElementById("track_time")
-        player.addEventListener("timeupdate", () => {
-            trackTimeInput.value = Math.floor(player.currentTime) //round down
-        })
+		console.log('faves', faves)
 
-        //Bookmark
-        const bookmarkBtn = document.getElementById("bookmark_button")
-        const bookmarkNotes = document.getElementById("bookmark_notes")
-        const saveBookmarkBtn = document.getElementById("save_bookmark_button")
-        bookmarkBtn.addEventListener("click", () => {
-            const bookmarkTime = Math.floor(player.currentTime)
-            bookmarkNotes.style.display = 'block'
-            saveBookmarkBtn.style.display = 'block'
-        })
+		buildFavesTable()
 
-        // Save bookmark
-        saveBookmarkBtn.addEventListener("click", () => {
-            saveBookmarkBtn.style.display = 'none'
-            bookmarkNotes.style.display = 'none'
 
-            const trackId = trackIndex
-            const trackTime = trackTimeInput.value
-            const notes = bookmarkNotes.value
+		//Build faves list
+		function buildFavesTable() {
+			const faves_list = document.getElementById("faves_list")
+			const faves_table = document.createElement('table')
 
-            saveBookmarkLocalStorage(trackId, trackTime, notes)
-        })
+			for(let i=0; i<faves.length; ++i) {
+				const tableRow = document.createElement('tr')
+				const tableCell1 = document.createElement('td')
+				const itemTitle = titles[faves[i]]
+				const aHref = document.createElement('a')
+				const url = window.the_catalog[ titles[faves[i]] ]
+				aHref.setAttribute('href', url)
+				aHref.innerText = itemTitle
+				tableCell1.appendChild(aHref)
+				tableRow.appendChild(tableCell1)
+				const tableCell2 = document.createElement('td')
+				const removeFave = document.createElement('a')
+				removeFave.innerText = 'X'
+				removeFave.setAttribute('onclick', `removeFave(${i})`)
+				removeFave.setAttribute('class', 'remove-fave')
+				tableCell2.appendChild(removeFave)
+				tableRow.appendChild(tableCell2)
+				faves_table.appendChild(tableRow)
+			}
+
+			faves_list.appendChild(faves_table)
+		}
 
 
         // FUNCTIONS
 
         //Use track_id if we get it
-        function checkTrackId() {    
+        function getTrackId() {    
             //See if there's a track id
             const url = new URL(window.location.href)
-            const trackId = url.searchParams.get('track_id')
+            const trackIdCheck = url.searchParams.get('track_id')
 
-            return trackId
+            //Set track index either to track_id if present, or else random
+            const _trackIndex = (trackIdCheck === null)
+				? Math.floor( Math.random() * titles.length )
+            	: trackIdCheck
+
+            return _trackIndex
         }
 
-        //Save bookmark in local storage
-        function saveBookmarkLocalStorage(id, time, note) {
-            const _bookmarks = localStorage.getItem('bookmarks')
+		//Setup the player
+		function setupPlayer(_trackUrl) {
+			const player = document.getElementById('player')
 
-            const bookmarks = (_bookmarks !== null)
-                ? JSON.parse(_bookmarks)
-                : {}
+			//Add source
+			const source = document.createElement('source')
+			player.appendChild(source)
 
-            bookmarks[id] = { [time]: note }
+			//Source with a random track
+			source.setAttribute('src', _trackUrl)
+			source.setAttribute('type', 'audio/mp3')
 
-            localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+			return player
+		}
+
+		//Favorite track
+		function favorite_track() {
+            faves.push(trackIndex)
+            localStorage.setItem('candice_favorites', JSON.stringify(faves))
+			deleteFavesTable()
+			buildFavesTable()
         }
+
+		//Remove fave
+		function removeFave(i) {
+			console.log('remove', i)
+			faves.splice(i, 1)
+            localStorage.setItem('candice_favorites', JSON.stringify(faves))
+			deleteFavesTable()
+			buildFavesTable()
+		}
+
+		function deleteFavesTable() {
+		  const table = document.querySelector('#faves_list table')
+		  table.remove()
+		}
     </script>
 </html>
 

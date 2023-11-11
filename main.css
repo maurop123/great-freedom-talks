@@ -1,0 +1,81 @@
+html {
+  font-family: sans-serif;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+a {
+  color: #2aa2c5;
+}
+
+a#player_title_link, a#track_title_link {
+  color: white;
+  text-decoration: none;
+}
+
+a#track_title_link:hover {
+  text-decoration: underline;
+}
+
+.app-title {
+  align-self: start;
+  margin-left: 12px;
+}
+
+button {
+  background: black;
+  color: white;
+  border-radius: 7px;
+  padding: 5px 10px;
+}
+
+h1 {
+ font-size: 2rem;
+}
+
+#faves_list table {
+  line-height: 2rem;
+  list-style-type: none;
+  margin: auto;
+  margin-top: 2.5rem;
+}
+
+#faves_list table tr {
+  height: 2.5rem;
+  padding-bottom: 1rem;
+}
+
+.remove-fave {
+  color: white;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+/* Utility tags */
+.mt-1 {
+ margin-top: 15px;
+}
+
+.mt-2 {
+ margin-top: 30px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Media Tag */
+
+@media only screen and (max-width: 560px) {
+/*small*/
+  html {
+	  font-size: 12px;
+  }
+}
